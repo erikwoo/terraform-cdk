@@ -90,6 +90,7 @@ describe("full integration test", () => {
     });
     await driver.setupTypescriptProject();
     driver.copyFolders("fixtures");
+    console.log(driver.workingDirectory);
   });
 
   withAuth("deploy in Terraform Cloud", async () => {
@@ -178,7 +179,7 @@ describe("full integration test", () => {
       proxyAddress = undefined;
     });
 
-    withAuth("deploy through HTTP_PROXY in Terraform Cloud", async () => {
+    withAuth("deploy through HTTPS_PROXY in Terraform Cloud", async () => {
       const client = new TerraformCloud(TERRAFORM_CLOUD_TOKEN);
 
       await client.Workspaces.create(orgName, {
@@ -192,10 +193,10 @@ describe("full integration test", () => {
         },
       });
 
-      process.env.HTTP_PROXY = `http://${proxyAddress}`;
+      process.env.HTTPS_PROXY = `http://${proxyAddress}`;
       // Run deploy command
       await driver.deploy(["source-stack"]);
-      process.env.HTTP_PROXY = undefined;
+      process.env.HTTPS_PROXY = undefined;
 
       await client.Workspaces.deleteByName(orgName, workspaceName);
       expect(proxyCalls).toHaveBeenCalled();

@@ -61,7 +61,7 @@ export interface TerraformPlan {
   readonly resources: PlannedResource[];
   readonly applyableResources: PlannedResource[];
   readonly needsApply: boolean;
-  readonly planFile: string;
+  readonly planFile?: string;
 }
 
 function filterChangingResources(resources: PlannedResource[]) {
@@ -114,7 +114,7 @@ export abstract class AbstractTerraformPlan implements TerraformPlan {
 export interface Terraform {
   init: () => Promise<void>;
   plan: (destroy: boolean, refreshOnly?: boolean) => Promise<TerraformPlan>;
-  deploy(planFile: string, refreshOnly?: boolean): Promise<void>;
+  deploy(planFile?: string, refreshOnly?: boolean): Promise<void>;
   destroy(): Promise<void>;
   output(): Promise<{ [key: string]: TerraformOutput }>;
   abort: () => Promise<void>;
